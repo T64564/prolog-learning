@@ -25,3 +25,5 @@ mother_of(sachiko, youko).
 parents_of(X, Y) :- father_of(X, Y).
 parents_of(X, Y) :- mother_of(X, Y).
 son_of(X, Y) :- parents_of(Y, X), male(X).
+daughter_of(X, Y) :- parents_of(Y, X), female(X).
+grandfather_of(X, Y) :- father_of(X, Z), parents_of(Z, Y).
