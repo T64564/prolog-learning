@@ -8,5 +8,5 @@ Prologの勉強のため作ったものを色々置いておく
 ## やりたいこと
 - 言語処理
 
-## ウェブサイト
+## 参考ウェブサイト
 [お気楽 Prolog プログラミング入門](http://www.geocities.jp/m_hiroi/prolog/index.html)
