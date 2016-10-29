@@ -1,0 +1,11 @@
+s(L1, L) :- np(L1, L2), vp(L2, L).
+np(L1, L) :- det(L1, L2), noun(L2, L).
+/* np(L1, L) :- det(L1, L2), noun(L2, L), single(L1), single(L2). */
+vp(L1, L) :- verb(L1, L2), np(L2, L).
+
+det([a | L], L).
+det([the | L], L).
+noun([table | L], L).
+noun([waiter | L], L).
+noun([meal | L], L).
+verb([brought | L], L).
