@@ -30,6 +30,6 @@ my_append([X | Ls], Y, [X | Zs]) :-
   my_append(Ls, Y, Zs).
 
 my_reverse([], []).
-my_reverse([X | Xs], Y) :-
+my_reverse([X | Xs],Y) :-
   my_append(Ys, [X], Y),
   my_reverse(Xs, Ys).
