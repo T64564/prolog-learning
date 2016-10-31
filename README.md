@@ -6,7 +6,9 @@ Prologの勉強のため作ったものを色々置いておく
 <!--   * イライザ -->
 
 ## やりたいこと
-- 言語処理
+- ELIZA
 
 ## 参考ウェブサイト
 [お気楽 Prolog プログラミング入門](http://www.geocities.jp/m_hiroi/prolog/index.html)
+## 注意
+* ’をちゃんと'に置換する
