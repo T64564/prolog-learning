@@ -1,0 +1,2 @@
+first([X | Y], X).
+rest([X | Y], Y).
