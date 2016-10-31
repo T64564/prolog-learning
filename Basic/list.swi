@@ -1,2 +1,3 @@
 first([X | Y], X).
 rest([X | Y], Y).
+add_to_list(X, Ls, [X | Ls]).
