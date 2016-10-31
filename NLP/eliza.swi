@@ -3,34 +3,8 @@
 %%
 % The main loop reads the input and calls process/1
 % It stops when the input is the word bye.
-tokenize([], []).
 
-tokenize([CharCode | RestCodes], Tokens) :- % blank
-  char_type(CharCode, space),
-  !,
-  tokenize(RestCodes, Tokens).
-
-tokenize([CharCode | CharCodes], [Word | Tokens]) :-
-  char_type(CharCode, alnum),
-  !,
-  make_word([CharCode | CharCodes], alnum, WordCodes, RestCoses) :-
-  name(Word, WordCodes),
-  tokenize(RestCodes, Tokens).
-
-tokenize([CharCode | CharCodes], [Char | Tokens]) :-
-  !,
-  name(Char, [CharCode]),
-  tokenize(CharCodes, Tokens).
-
-make_word([CharCode1, CharCode2 | CharCodes], alnum,
-  [CharCode1 | WordCodes], RestCodes) :-
-  char_type(CharCode2, alnum),
-  !,
-  make_word([CharCode2 | CharCodes], alnum, WordCodes,
-  RestCodes).
-
-make_word([CharCode | RestCodes], alnum, [CharCode],
-  RestCodes).
+:- [NLP/tokenizer].
 
 eliza :-
   write('Hello, I am ELIZA. How can I help you?'), nl,
@@ -59,6 +33,7 @@ end(X, Y, Z) :- append(X, Z, Y).
 % user’s utterance
 process([bye | _]) :-
   write(’ELIZA: bye’), nl, !.
+
 process(In) :-
   utterance(Out, In, []),
   !,
@@ -84,6 +59,7 @@ utterance([’Tell’, me, more, .]) -->
 [_].
 utterance([’Please’, go, on, .]) -->
 beginning(_).
+
 % The Prolog clauses beginning/3 and end/3
 % link the pieces of the utterance
 beginning(X, Y, Z) :- append(X, Z, Y).
