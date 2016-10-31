@@ -1,3 +1,8 @@
+% Usage:
+% ?- make_trielist(tab, noun, TL).
+% TL = [t, [a, [b, noun]]].
+%
+
 % make_trie(+WordList, -Trie)
 make_trie([Word | WordList], Trie) :-
   make_trielist(Word, Word, WordTrie),
