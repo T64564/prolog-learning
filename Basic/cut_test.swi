@@ -1,0 +1,8 @@
+cut_test:-
+  member(E,[a,b,c]),
+  test2(E).
+test2(E):-
+  member(F,[d,e]),
+  member(G,[f,g]),
+  !,
+  write([E,F,G]).
