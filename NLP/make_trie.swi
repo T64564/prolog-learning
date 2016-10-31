@@ -1,0 +1,63 @@
+% make_trie(+WordList, -Trie)
+make_trie([Word | WordList], Trie) :-
+  make_trielist(Word, Word, WordTrie),
+  make_trie(WordList, [WordTrie], Trie).
+
+% make_trie(+WordList, -Trie, -FinalTrie)
+make_trie([], T, T) :- !.
+make_trie([Word | WordList], Trie, FinalTrie) :-
+  insert_word_in_trie(Word, Word, Trie, NewTrie),
+  make_trie(WordList, NewTrie, FinalTrie).
+
+%make_trielist(+Word, +Leave, -WordTtrie)
+% Creates the trie for a single word.
+% Leaf contains the type of the word.
+make_trielist(Word, Leaf, WordTrie) :-
+  atom_chars(Word, CharList),
+  make_trielist_aux(CharList, Leaf, WordTrie).
+
+make_trielist_aux([X], Leaf, [X, Leaf]) :- !.
+  make_trielist_aux([X | L], Leaf, [X | [LS]]) :-
+    make_trielist_aux(L, Leaf, LS).
+
+%Inserts a word in a trie.
+%The Leaf argument contains the type of the word
+%insert_word_in_trie(+Word, +Leaf, +Trie, -NewTrie)
+insert_word_in_trie(Word, Leaf, Trie, NewTrie) :-
+  make_trielist(Word, Leaf, WordTrie),
+  insert_wordtrie_in_trie(WordTrie, Trie, NewTrie).
+%Inserts a word trie in a trie
+%insert_wordtrie_in_trie(+WordTrie, +Trie, -NewTrie)
+insert_wordtrie_in_trie([H | [T]],
+[[H, Leaf | BT] | LT], [[H, Leaf | NB] | LT]) :-
+  atom(Leaf),
+  !,
+  insert_wordtrie_in_trie(T, BT, NB).
+% Traverses a segment shared between the trie and
+% the word and encounters a leaf.
+% It assumes that the leaf is an atom.
+insert_wordtrie_in_trie([H | [T]], [[H | BT] | LT],
+[[H | NB] | LT]) :-
+  !,
+  insert_wordtrie_in_trie(T, BT, NB).
+% Traverses a segment shared between the trie and
+% the word.
+insert_wordtrie_in_trie([H | T], [[HT | BT] | LT],
+[[HT | BT] | NB]) :-
+  !,
+  insert_wordtrie_in_trie([H | T], LT, NB).
+% Traverses a nonshared segment
+insert_wordtrie_in_trie(RW, RT, NB) :-
+  append(RT, [RW], NB),
+  !.
+% Appends the remaining part of the word to the trie.
+
+% Checks if a word is in a trie
+% is_word_in_trie(+WordChars, +Trie, -Lex)
+is_word_in_trie([H | T], Trie, Lex) :-
+  member([H | Branches], Trie),
+  is_word_in_trie(T, Branches, Lex).
+is_word_in_trie([], Trie, LexList) :-
+  findall(Lex, (member(Lex, Trie), atom(Lex)), LexList),
+  LexList \= [].
+% We assume that the word lexical entry is an atom
