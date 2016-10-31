@@ -4,7 +4,7 @@ add_to_list(X, Ls, [X | Ls]).
 
 retrieve(1, [X | Y], X).
 retrieve(N, [X | Y], Z) :-
-  N - 1 > 0,
+  N > 1,
   N1 is N - 1,
   retrieve(N1, Y, Z).
 
@@ -13,3 +13,10 @@ insert_at(N, X, [Y | Ls], [Y | Zs]) :-
   N > 1,
   N1 is N - 1,
   insert_at(N1, X, Ls, Zs).
+
+remove_at(1, [X | Y], Y).
+remove_at(N, [X | Y], [X | Z]) :-
+  N > 1,
+  N1 is N - 1,
+  remove_at(N1, Y, Z).
+
