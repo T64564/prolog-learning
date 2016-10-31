@@ -24,3 +24,7 @@ my_length([], 0).
 my_length([X | Y], N) :-
   my_length(Y, N1),
   N is N1 + 1.
+
+my_append([], X, X).
+my_append([X | Ls], Y, [X | Zs]) :-
+  my_append(Ls, Y, Zs).
