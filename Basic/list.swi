@@ -20,3 +20,7 @@ remove_at(N, [X | Y], [X | Z]) :-
   N1 is N - 1,
   remove_at(N1, Y, Z).
 
+my_length([], 0).
+my_length([X | Y], N) :-
+  my_length(Y, N1),
+  N is N1 + 1.
