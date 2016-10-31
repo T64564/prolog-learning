@@ -1,0 +1,5 @@
+add_one([], []).
+add_one([X | Xs], Z) :-
+  X1 is X + 1,
+  add_one(Xs, Y),
+  append([X1], Y, Z).
