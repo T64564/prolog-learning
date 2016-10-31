@@ -33,3 +33,12 @@ my_reverse([], []).
 my_reverse([X | Xs],Y) :-
   my_append(Ys, [X], Y),
   my_reverse(Xs, Ys).
+
+my_member(X, [X | Y]).
+my_member(X, [Y | Z]) :- my_member(X, Z).
+
+my_select(X, [X | Xs], Xs).
+my_select(X, [Y | Ys], [Y | Zs]) :- my_select(X, Ys, Zs).
+
+selects([], X).
+selects([X | Xs], Y) :- my_select(X, Y, Ys), selects(Xs, Ys).
