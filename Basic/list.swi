@@ -1,3 +1,8 @@
 first([X | Y], X).
 rest([X | Y], Y).
 add_to_list(X, Ls, [X | Ls]).
+
+retrieve(1, [X | Y], X).
+retrieve(N, [X | Y], Z) :-
+  N - 1 > 0,
+  retrieve(N - 1, Y, Z).
