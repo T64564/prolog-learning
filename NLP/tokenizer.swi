@@ -1,3 +1,10 @@
+% Usage(多分)
+% ?- name("This is a sample sentence.", Z), tokenize(Z, X)
+% Z = [84, 104, 105, 115, 32, 105, 115, 32, 97|...],
+% X = ['This', is, a, sample, sentence, '.'].
+%
+ 
+
 % tokenize(+CharCodes, -Tokens)
 %  breaks a list of character codes into a list of tokens.
 tokenize([], []).

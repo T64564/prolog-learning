@@ -1,0 +1,28 @@
+% The people
+'Scocrates'.
+'Pierre'.
+
+% The chairs:
+chair1.
+chair2.
+
+% The unique table:
+table1.
+
+person('Scocrates').
+person('Pierre').
+
+object(table1).
+object(chair1).
+object(chair2).
+
+table(table1).
+chair(chair1).
+chair(chair2).
+
+in_front_of(chair1, table1).
+on('Pierre', table1).
+
+position(table1, v(0, 0, 0)).
+  position(chair1, v(1, 1, 0)).
+position(chair2, v(10, -10, 0)).

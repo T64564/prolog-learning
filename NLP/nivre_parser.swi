@@ -1,0 +1,105 @@
+% Usage:
+/*
+ * 入力
+ここから---->
+nivre_parser(
+[w([id=0, form=root, postag='ROOT']),
+w([id=1, form=the, postag='DT']),
+w([id=2, form=waiter, postag='NN']),
+w([id=3, form=brought, postag='VBD']),
+w([id=4, form=the, postag='DT']),
+w([id=5, form=meal, postag='NN'])],
+A,
+[w([id=1, form=the, head=2, deprel=det]),
+w([id=2, form=waiter, head=3, deprel=sub]),
+w([id=3, form=brought, head=0, deprel=root]),
+w([id=4, form=the, head=5, deprel=det]),
+w([id=5, form=meal, head=3, deprel=obj])]
+).
+<----ここまでコピペして入力
+ * 出力
+A = [sh, sh, la, sh, la, ra, sh, la, ra] ;
+A = [fail].
+*/
+
+% 4 transition
+%
+% left_arc(+Words, +Stack, -NewStack, +Graph, -NewGraph)
+left_arc([W | _], [T | Stack], Stack, Graph,
+[w([id=IDT, form=FORMT, head=IDW, deprel=_]) |
+Graph]) :-
+  W = w([id=IDW | _]),
+  T = w([id=IDT, form=FORMT | _]),
+  \+ member(w([id=IDT, form=FORMT | _]), Graph).
+
+% right_arc(+Words, -NewWords, +Stack, -NewStack,
+%  +Graph, -NewGraph)
+right_arc([W | Words], Words, [T | Stack], [W, T | Stack], 
+Graph, [w([id=IDW, form=FORMW, head=IDT, deprel=_]) | Graph]) :-
+  W = w([id=IDW, form=FORMW | _]),
+  T = w([id=IDT | _]),
+  \+ member(w([id=IDW, form=FORMW | _]), Graph).
+
+% reduce(+Stack, -NewStack, +Graph)
+reduce([T | Stack], Stack, Graph) :-
+  T = w([id=IDT, form=FORMT | _]),
+  member(w([id=IDT, form=FORMT | _]), Graph).
+
+% shift(+Words, -NewWords, +Stack, -NewStack)
+shift([First | Words], Words, Stack, [First | Stack]).
+
+% oracle(+Words, +Stack, +Graph, -Operation)
+% Predicts the next transition from the manually-annoted graph
+oracle(_, _, _, Op) :-
+  nonvar(Op),
+  !.
+oracle([W | _], [T | _], Graph, la) :-
+  T = w([id=IDT, form=FORMT | _]),
+  W = w([id=IDW | _]),
+  member(w([id=IDT, form=FORMT, head=IDW | _]),
+  Graph),
+  !.
+oracle([W | _], [T | _], Graph, ra) :-
+  T = w([id=IDT | _]),
+  W = w([id=IDW, form=FORMW | _]),
+  member(w([id=IDW, form=FORMW, head=IDT | _]),
+  Graph), !.
+oracle([W | _], [_ |Stack], Graph, re) :-
+  member(K, Stack),
+  K = w([id=IDK, form=FORMK | _]),
+  W = w([id=IDW, form=FORMW | _]),
+  (
+    member(w([id=IDK, form=FORMK, head=IDW | _]), Graph)
+  ;
+    member(w([id=IDW, form=FORMW, head=IDK | _]), Graph)
+  ),
+  !.
+oracle(_, _, _, sh).
+
+nivre_parser(Sentence, Ops, RefGraph) :-
+  nivre_parser(Sentence, [], Ops, [], RefGraph).
+nivre_parser(_, [fail], _).
+
+nivre_parser([], _, [], CurGraph, RefGraph) :-
+  nonvar(RefGraph),
+  !,
+  subset(RefGraph, CurGraph),
+  subset(CurGraph, RefGraph).
+nivre_parser([], _, [], Graph, Graph).
+nivre_parser(Words, Stack, [Op | Ops], Graph, RefGraph) :-
+  oracle(Words, Stack, RefGraph, Op),
+  execute_action(Op, Words, NWords, Stack, NStack, Graph, NGraph),
+  nivre_parser(NWords, NStack, Ops, NGraph, RefGraph).
+
+% execute_action(+Op, +Words, -NewWords, +Stack, -NewStack, +Graph, NewGraph)
+execute_action(la, Words, Words, Stack, NStack, Graph, NGraph) :-
+  left_arc(Words, Stack, NStack, Graph, NGraph).
+execute_action(ra, Words, NWords, Stack, NStack, Graph,NGraph) :-
+  right_arc(Words, NWords, Stack, NStack, Graph, NGraph).
+execute_action(re, Words, Words, Stack, NStack, Graph, Graph) :-
+  reduce(Stack, NStack, Graph).
+execute_action(sh, Words, NWords, Stack, NStack, Graph,Graph) :-
+  shift(Words, NWords, Stack, NStack).
+execute_action(Op, _, _, _, _, _, _) :-
+  \+ member(Op, [la, ra, re, sh]),
+  write('Illegal action. Returning'), nl.
