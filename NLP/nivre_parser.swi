@@ -1,5 +1,7 @@
 % Usage:
 /*
+ * 入力
+ここから---->
 nivre_parser(
 [w([id=0, form=root, postag='ROOT']),
 w([id=1, form=the, postag='DT']),
@@ -14,6 +16,10 @@ w([id=3, form=brought, head=0, deprel=root]),
 w([id=4, form=the, head=5, deprel=det]),
 w([id=5, form=meal, head=3, deprel=obj])]
 ).
+<----ここまでコピペして入力
+ * 出力
+A = [sh, sh, la, sh, la, ra, sh, la, ra] ;
+A = [fail].
 */
 
 % 4 transition
