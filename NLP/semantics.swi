@@ -24,5 +24,20 @@ in_front_of(chair1, table1).
 on('Pierre', table1).
 
 position(table1, v(0, 0, 0)).
-  position(chair1, v(1, 1, 0)).
+position(chair1, v(1, 1, 0)).
 position(chair2, v(10, -10, 0)).
+
+s(Sem) --> np((X^SemRest)^Sem), vp(X^SemRest).
+np(Sem) --> determiner((X^SemNP)^Sem), noun(X^SemNP).
+np((X^SemRest)^Sem) --> 
+determiner((X^SemNP)^(X^SemRest)^Sem), noun(X^SemNP).
+vp(X^SemRest) --> verb(X^SemRest).
+vp(X^SemRest) --> verb(Y^X^SemVerb), np((Y^SemVerb)^SemRest).
+noun(X^waiter(X)) --> [waiter].
+noun(X^patron(X)) --> [patron].
+noun(X^meal(X)) --> [meal].
+verb(X^rushed(X)) --> [rushed].
+verb(Y^X^ordered(X, Y)) --> [ordered].
+verb(Y^X^brought(X, Y)) --> [brought].
+determiner((X^SemNP)^(X^SemRest)^a(X, SemNP, SemRest)) -->  [a].
+determiner((X^SemNP)^(X^SemRest)^the(X, SemNP, SemRest)) -->  [the].
